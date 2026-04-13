@@ -125,8 +125,8 @@ public class TaskResource {
         Optional<Task> result = taskRepository
             .findById(task.getId())
             .map(existingTask -> {
-                if (task.getTitle() != null) {
-                    existingTask.setTitle(task.getTitle());
+                                if (task.getName() != null) {
+                                        existingTask.setName(task.getName());
                 }
                 if (task.getDescription() != null) {
                     existingTask.setDescription(task.getDescription());
