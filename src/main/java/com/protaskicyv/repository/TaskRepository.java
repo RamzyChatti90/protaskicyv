@@ -1,9 +1,10 @@
 package com.protaskicyv.repository;
 
 import com.protaskicyv.domain.Task;
-import java.util.List;
 import com.protaskicyv.domain.enumeration.TaskStatus;
+import java.util.List;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param; // <-- Ajout de cet import
 import org.springframework.stereotype.Repository;
 
 /**
