@@ -42,6 +42,8 @@ public class Task implements Serializable {
     @Column(name = "status")
     private TaskStatus status;
 
+    @ManyToOne
+    private User assignedTo;
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -107,6 +109,19 @@ public class Task implements Serializable {
 
     public void setStatus(TaskStatus status) {
         this.status = status;
+        this.status = status;
+    }
+    public User getAssignedTo() {
+        return this.assignedTo;
+    }
+
+    public Task assignedTo(User user) {
+        this.setAssignedTo(user);
+        return this;
+    }
+
+    public void setAssignedTo(User user) {
+        this.assignedTo = user;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
