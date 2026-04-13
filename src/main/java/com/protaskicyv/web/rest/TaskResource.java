@@ -2,6 +2,8 @@ package com.protaskicyv.web.rest;
 
 import com.protaskicyv.domain.Task;
 import com.protaskicyv.repository.TaskRepository;
+import com.protaskicyv.service.TaskDashboardService;
+import com.protaskicyv.service.dto.TaskDashboardDTO;
 import com.protaskicyv.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -35,9 +37,11 @@ public class TaskResource {
     private String applicationName;
 
     private final TaskRepository taskRepository;
+    private final TaskDashboardService taskDashboardService;
 
-    public TaskResource(TaskRepository taskRepository) {
+    public TaskResource(TaskRepository taskRepository, TaskDashboardService taskDashboardService) {
         this.taskRepository = taskRepository;
+        this.taskDashboardService = taskDashboardService;
     }
 
     /**
@@ -121,14 +125,17 @@ public class TaskResource {
         Optional<Task> result = taskRepository
             .findById(task.getId())
             .map(existingTask -> {
-                if (task.getName() != null) {
-                    existingTask.setName(task.getName());
+                if (task.getTitle() != null) {
+                    existingTask.setTitle(task.getTitle());
                 }
                 if (task.getDescription() != null) {
                     existingTask.setDescription(task.getDescription());
                 }
                 if (task.getCreatedAt() != null) {
                     existingTask.setCreatedAt(task.getCreatedAt());
+                }
+                if (task.getStatus() != null) {
+                    existingTask.setStatus(task.getStatus());
                 }
 
                 return existingTask;
@@ -146,7 +153,21 @@ public class TaskResource {
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tasks in body.
      */
-    @GetMapping("")
+
+    /**
+     * {@code GET  /tasks/dashboard} : get the dashboard data for the current user.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the TaskDashboardDTO, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/dashboard")
+    public ResponseEntity<TaskDashboardDTO> getTaskDashboardForCurrentUser() {
+        LOG.debug("REST request to get Task Dashboard for current user");
+        Optional<TaskDashboardDTO> taskDashboardDTO = taskDashboardService.getTaskDashboardForCurrentUser();
+        return ResponseUtil.wrapOrNotFound(taskDashboardDTO);
+    }
+
+    /**
+     * {@code GET  /tasks/:id} : get the "id" task.
     public List<Task> getAllTasks() {
         LOG.debug("REST request to get all Tasks");
         return taskRepository.findAll();
