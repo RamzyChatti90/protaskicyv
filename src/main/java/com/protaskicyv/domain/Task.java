@@ -1,5 +1,8 @@
 package com.protaskicyv.domain;
 
+import com.protaskicyv.domain.enumeration.TaskStatus;
+
+import com.protaskicyv.domain.enumeration.TaskStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
@@ -34,6 +37,10 @@ public class Task implements Serializable {
 
     @Column(name = "created_at")
     private Instant createdAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private TaskStatus status;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -89,6 +96,19 @@ public class Task implements Serializable {
         this.createdAt = createdAt;
     }
 
+    public TaskStatus getStatus() {
+        return this.status;
+    }
+
+    public Task status(TaskStatus status) {
+        this.setStatus(status);
+        return this;
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -116,6 +136,7 @@ public class Task implements Serializable {
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
             ", createdAt='" + getCreatedAt() + "'" +
+            ", status='" + getStatus() + "'" +
             "}";
     }
 }
