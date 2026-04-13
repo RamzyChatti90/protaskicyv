@@ -1,0 +1,20 @@
+{
+  "generator-jhipster": {
+    "applicationType": "monolith",
+    "authenticationType": "jwt",
+    "baseName": "protaskicyv",
+    "buildTool": "maven",
+    "clientFramework": "angular",
+    "databaseType": "sql",
+    "devDatabaseType": "h2Disk",
+    "entities": ["Task", "Category", "Comment"],
+    "jhipsterVersion": "8.11.0",
+    "jwtSecretKey": "NmVjNjVmNzc4NDI5MDMzOTJhMGI0ZTQ1MzJhZDI3MjdmNDU5YzA4NTc4MjgyYWVlY2JhMjllY2QyZjA5MTI4OGUzMjJjNjM4OWIxNTc5MmM3ZDM4NmU4NzcwY2JlOWMzMGRmMmRlODk3Y2JjMmRhNDIxNzg4ZTVmZWJiOGUyZWI=",
+    "languages": ["en"],
+    "lastLiquibaseTimestamp": 1776081614000,
+    "nativeLanguage": "en",
+    "packageName": "com.protaskicyv",
+    "prodDatabaseType": "postgresql",
+    "serverPort": "9000"
+  }
+}
