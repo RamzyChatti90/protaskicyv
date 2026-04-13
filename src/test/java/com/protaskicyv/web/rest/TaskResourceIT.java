@@ -31,8 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class TaskResourceIT {
 
-    private static final String DEFAULT_TITLE = "AAAAAAAAAA";
-    private static final String UPDATED_TITLE = "BBBBBBBBBB";
+    private static final String DEFAULT_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_NAME = "BBBBBBBBBB";
 
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
@@ -40,7 +40,7 @@ class TaskResourceIT {
     private static final Instant DEFAULT_CREATED_AT = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_CREATED_AT = Instant.now().truncatedTo(java.time.temporal.ChronoUnit.MILLIS);
 
-    private static final TaskStatus DEFAULT_STATUS = TaskStatus.TODO;
+    private static final TaskStatus DEFAULT_STATUS = TaskStatus.NEW;
     private static final TaskStatus UPDATED_STATUS = TaskStatus.IN_PROGRESS;
 
     @Autowired
@@ -65,7 +65,7 @@ class TaskResourceIT {
      */
     public static Task createEntity(EntityManager em) {
         Task task = new Task()
-            .title(DEFAULT_TITLE)
+            .name(DEFAULT_NAME)
             .description(DEFAULT_DESCRIPTION)
             .createdAt(DEFAULT_CREATED_AT)
             .status(DEFAULT_STATUS);
@@ -80,7 +80,7 @@ class TaskResourceIT {
      */
     public static Task createUpdatedEntity(EntityManager em) {
         Task task = new Task()
-            .title(UPDATED_TITLE)
+            .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
             .createdAt(UPDATED_CREATED_AT)
             .status(UPDATED_STATUS);
@@ -103,10 +103,11 @@ class TaskResourceIT {
             .orElseThrow(() -> new IllegalArgumentException("User 'testuser' not found"));
 
         task.setAssignedTo(currentUser);
+        task.setStatus(TaskStatus.NEW);
         taskRepository.saveAndFlush(task);
 
         Task task2 = createEntity(em);
-        task2.setStatus(TaskStatus.DONE);
+        task2.setStatus(TaskStatus.COMPLETED);
         task2.setAssignedTo(currentUser);
         taskRepository.saveAndFlush(task2);
 
@@ -115,8 +116,8 @@ class TaskResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath(".totalTasks").value(2))
-            .andExpect(jsonPath(".tasksByStatus.TODO").value(1))
-            .andExpect(jsonPath(".tasksByStatus.DONE").value(1))
+            .andExpect(jsonPath(".tasksByStatus.NEW").value(1))
+            .andExpect(jsonPath(".tasksByStatus.COMPLETED").value(1))
             .andExpect(jsonPath(".tasksByStatus.IN_PROGRESS").value(0));
     }
 
@@ -139,6 +140,7 @@ class TaskResourceIT {
         });
 
         task.setAssignedTo(testUser);
+        task.setStatus(TaskStatus.NEW);
         taskRepository.saveAndFlush(task);
 
         Task task2 = createEntity(em);
