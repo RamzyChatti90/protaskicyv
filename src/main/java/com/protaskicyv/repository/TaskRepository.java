@@ -1,6 +1,8 @@
 package com.protaskicyv.repository;
 
 import com.protaskicyv.domain.Task;
+import java.util.List;
+import com.protaskicyv.domain.enumeration.TaskStatus;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +11,11 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface TaskRepository extends JpaRepository<Task, Long> {}
+public interface TaskRepository extends JpaRepository<Task, Long> {
+    @Query("select task from Task task where task.assignedTo.login = ?#{authentication.name}")
+    List<Task> findByAssignedToIsCurrentUser();
+
+    Long countByAssignedTo_Login(String login);
+
+    Long countByAssignedTo_LoginAndStatus(String login, TaskStatus status);
+}
