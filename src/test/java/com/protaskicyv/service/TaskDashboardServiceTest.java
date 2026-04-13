@@ -38,22 +38,22 @@ class TaskDashboardServiceTest {
             mockedSecurityUtils.when(SecurityUtils::getCurrentUserLogin).thenReturn(Optional.of(currentUserLogin));
 
             when(taskRepository.countByAssignedTo_Login(currentUserLogin)).thenReturn(10L);
-            when(taskRepository.countByAssignedTo_LoginAndStatus(currentUserLogin, TaskStatus.TODO)).thenReturn(5L);
+            when(taskRepository.countByAssignedTo_LoginAndStatus(currentUserLogin, TaskStatus.NEW)).thenReturn(5L);
             when(taskRepository.countByAssignedTo_LoginAndStatus(currentUserLogin, TaskStatus.IN_PROGRESS)).thenReturn(3L);
-            when(taskRepository.countByAssignedTo_LoginAndStatus(currentUserLogin, TaskStatus.DONE)).thenReturn(2L);
+            when(taskRepository.countByAssignedTo_LoginAndStatus(currentUserLogin, TaskStatus.COMPLETED)).thenReturn(2L);
 
-            TaskDashboardDTO result = taskDashboardService.getTaskDashboardForCurrentUser();
+            TaskDashboardDTO result = taskDashboardService.getTaskDashboardForCurrentUser().orElse(null);
 
             assertThat(result).isNotNull();
             assertThat(result.getTotalTasks()).isEqualTo(10L);
-            assertThat(result.getTasksByStatus().get(TaskStatus.TODO)).isEqualTo(5L);
+            assertThat(result.getTasksByStatus().get(TaskStatus.NEW)).isEqualTo(5L);
             assertThat(result.getTasksByStatus().get(TaskStatus.IN_PROGRESS)).isEqualTo(3L);
-            assertThat(result.getTasksByStatus().get(TaskStatus.DONE)).isEqualTo(2L);
+            assertThat(result.getTasksByStatus().get(TaskStatus.COMPLETED)).isEqualTo(2L);
 
             verify(taskRepository, times(1)).countByAssignedTo_Login(currentUserLogin);
-            verify(taskRepository, times(1)).countByAssignedTo_LoginAndStatus(currentUserLogin, TaskStatus.TODO);
+            verify(taskRepository, times(1)).countByAssignedTo_LoginAndStatus(currentUserLogin, TaskStatus.NEW);
             verify(taskRepository, times(1)).countByAssignedTo_LoginAndStatus(currentUserLogin, TaskStatus.IN_PROGRESS);
-            verify(taskRepository, times(1)).countByAssignedTo_LoginAndStatus(currentUserLogin, TaskStatus.DONE);
+            verify(taskRepository, times(1)).countByAssignedTo_LoginAndStatus(currentUserLogin, TaskStatus.COMPLETED);
         }
     }
 
@@ -62,7 +62,7 @@ class TaskDashboardServiceTest {
         try (MockedStatic<SecurityUtils> mockedSecurityUtils = mockStatic(SecurityUtils.class)) {
             mockedSecurityUtils.when(SecurityUtils::getCurrentUserLogin).thenReturn(Optional.empty());
 
-            TaskDashboardDTO result = taskDashboardService.getTaskDashboardForCurrentUser();
+            TaskDashboardDTO result = taskDashboardService.getTaskDashboardForCurrentUser().orElse(null);
 
             assertThat(result).isNotNull();
             assertThat(result.getTotalTasks()).isZero();
