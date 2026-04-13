@@ -144,7 +144,7 @@ class TaskResourceIT {
         taskRepository.saveAndFlush(task);
 
         Task task2 = createEntity(em);
-        task2.setStatus(TaskStatus.DONE);
+        task2.setStatus(TaskStatus.COMPLETED);
         task2.setAssignedTo(testUser);
         taskRepository.saveAndFlush(task2);
 
