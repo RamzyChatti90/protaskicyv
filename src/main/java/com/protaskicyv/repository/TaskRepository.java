@@ -15,7 +15,9 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query("select task from Task task where task.assignedTo.login = ?#{authentication.name}")
     List<Task> findByAssignedToIsCurrentUser();
 
-    Long countByAssignedTo_Login(String login);
+    @Query("SELECT COUNT(t) FROM Task t WHERE t.assignedTo.login = :login")
+    Long countByAssignedTo_Login(@Param("login") String login);
 
-    Long countByAssignedTo_LoginAndStatus(String login, TaskStatus status);
+    @Query("SELECT COUNT(t) FROM Task t WHERE t.assignedTo.login = :login AND t.status = :status")
+    Long countByAssignedTo_LoginAndStatus(@Param("login") String login, @Param("status") TaskStatus status);
 }
